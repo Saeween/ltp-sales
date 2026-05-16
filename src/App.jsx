@@ -18,30 +18,30 @@ function App() {
     return saved
       ? JSON.parse(saved)
       : [
-          {
-            id: 1,
-            category: "UZBAT",
-            name: "KENT mix",
-            price: 20000,
-            qty: ""
-          },
+        {
+          id: 1,
+          category: "UZBAT",
+          name: "KENT mix",
+          price: 20000,
+          qty: ""
+        },
 
-          {
-            id: 2,
-            category: "UZBAT",
-            name: "kent 6",
-            price: 19500,
-            qty: ""
-          },
+        {
+          id: 2,
+          category: "UZBAT",
+          name: "kent 6",
+          price: 19500,
+          qty: ""
+        },
 
-          {
-            id: 3,
-            category: "ESSE",
-            name: "Esse Blue",
-            price: 18000,
-            qty: ""
-          },
-        ]
+        {
+          id: 3,
+          category: "ESSE",
+          name: "Esse Blue",
+          price: 18000,
+          qty: ""
+        },
+      ]
   })
 
   const [selectedCategory, setSelectedCategory] =
@@ -68,7 +68,15 @@ function App() {
   const [searchManage, setSearchManage] =
     useState("")
   const [searchProduct, setSearchProduct] =
-  useState("")
+    useState("")
+  const [login, setLogin] =
+    useState("")
+
+  const [password, setPassword] =
+    useState("")
+
+  const [isAuth, setIsAuth] =
+    useState(false)
   useEffect(() => {
 
     localStorage.setItem(
@@ -77,16 +85,16 @@ function App() {
     )
 
   }, [categories])
-const [salesHistory, setSalesHistory] =
-  useState(() => {
+  const [salesHistory, setSalesHistory] =
+    useState(() => {
 
-    const saved =
-      localStorage.getItem("salesHistory")
+      const saved =
+        localStorage.getItem("salesHistory")
 
-    return saved
-      ? JSON.parse(saved)
-      : []
-  })
+      return saved
+        ? JSON.parse(saved)
+        : []
+    })
   useEffect(() => {
 
     localStorage.setItem(
@@ -98,13 +106,29 @@ const [salesHistory, setSalesHistory] =
 
   useEffect(() => {
 
-  localStorage.setItem(
-    "salesHistory",
-    JSON.stringify(salesHistory)
-  )
+    localStorage.setItem(
+      "salesHistory",
+      JSON.stringify(salesHistory)
+    )
 
-}, [salesHistory])
+  }, [salesHistory])
+  const handleLogin = () => {
 
+    if (
+      login === "admin" &&
+      password === "ltp2026"
+    ) {
+
+      setIsAuth(true)
+
+    }
+
+    else {
+
+      alert("Неверный логин или пароль")
+
+    }
+  }
   const totalPacks = products.reduce(
     (sum, p) => sum + (Number(p.qty) || 0),
     0
@@ -188,24 +212,24 @@ const [salesHistory, setSalesHistory] =
     receipt += new Date().toLocaleString()
 
     try {
-    const newSale = {
+      const newSale = {
 
-  id: Date.now(),
+        id: Date.now(),
 
-  items: soldProducts,
+        items: soldProducts,
 
-  totalPacks,
+        totalPacks,
 
-  totalPrice,
+        totalPrice,
 
-  date:
-    new Date().toLocaleString()
-}
+        date:
+          new Date().toLocaleString()
+      }
 
-setSalesHistory(prev => [
-  newSale,
-  ...prev
-])
+      setSalesHistory(prev => [
+        newSale,
+        ...prev
+      ])
       await navigator.clipboard.writeText(
         receipt
       )
@@ -228,6 +252,58 @@ setSalesHistory(prev => [
     setProducts(cleared)
   }
 
+  if (!isAuth) {
+
+    return (
+
+      <div style={styles.loginPage}>
+
+        <div style={styles.loginCard}>
+
+          <h1>LTP SALES</h1>
+
+          <input
+
+            style={styles.loginInput}
+
+            placeholder="LOGIN"
+
+            value={login}
+
+            onChange={(e) =>
+              setLogin(e.target.value)
+            }
+          />
+
+          <input
+
+            type="password"
+
+            style={styles.loginInput}
+
+            placeholder="PASSWORD"
+
+            value={password}
+
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <button
+
+            style={styles.loginButton}
+
+            onClick={handleLogin}
+          >
+            ENTER
+          </button>
+
+        </div>
+
+      </div>
+    )
+  }
   return (
 
     <div style={styles.container}>
@@ -269,38 +345,38 @@ setSalesHistory(prev => [
       <div style={styles.main}>
 
         <div style={styles.products}>
-        <input
+          <input
 
-  style={styles.searchInput}
+            style={styles.searchInput}
 
-  placeholder="🔍 Поиск товара"
+            placeholder="🔍 Поиск товара"
 
-  value={searchProduct}
+            value={searchProduct}
 
-  onChange={(e) =>
-    setSearchProduct(e.target.value)
-  }
-/>
+            onChange={(e) =>
+              setSearchProduct(e.target.value)
+            }
+          />
           {products
 
-  .filter(p => {
+            .filter(p => {
 
-    const matchesCategory =
-      p.category === selectedCategory
+              const matchesCategory =
+                p.category === selectedCategory
 
-    const matchesSearch =
-      p.name
-        .toLowerCase()
-        .includes(
-          searchProduct.toLowerCase()
-        )
+              const matchesSearch =
+                p.name
+                  .toLowerCase()
+                  .includes(
+                    searchProduct.toLowerCase()
+                  )
 
-    if (searchProduct.length > 0) {
-      return matchesSearch
-    }
+              if (searchProduct.length > 0) {
+                return matchesSearch
+              }
 
-    return matchesCategory
-  })
+              return matchesCategory
+            })
 
 
 
@@ -369,7 +445,7 @@ setSalesHistory(prev => [
               </div>
 
             ))}
-                    </div>
+        </div>
 
         <div style={styles.bottomBar}>
 
@@ -399,63 +475,63 @@ setSalesHistory(prev => [
         <div style={styles.adminPanel}>
 
           <h2>ADMIN</h2>
-        <div style={styles.adminSection}>
+          <div style={styles.adminSection}>
 
-  <h3>История продаж</h3>
+            <h3>История продаж</h3>
 
-  <button
+            <button
 
-    style={styles.clearHistoryButton}
+              style={styles.clearHistoryButton}
 
-    onClick={() => {
+              onClick={() => {
 
-      const confirmClear =
-        window.confirm(
-          "Очистить историю?"
-        )
+                const confirmClear =
+                  window.confirm(
+                    "Очистить историю?"
+                  )
 
-      if (!confirmClear) return
+                if (!confirmClear) return
 
-      setSalesHistory([])
-    }}
-  >
-    Очистить историю
-  </button>
+                setSalesHistory([])
+              }}
+            >
+              Очистить историю
+            </button>
 
-  {salesHistory.map(sale => (
+            {salesHistory.map(sale => (
 
-    <div
-      key={sale.id}
-      style={styles.historyCard}
-    >
+              <div
+                key={sale.id}
+                style={styles.historyCard}
+              >
 
-      <div style={styles.historyDate}>
-        {sale.date}
-      </div>
+                <div style={styles.historyDate}>
+                  {sale.date}
+                </div>
 
-      {sale.items.map(item => (
+                {sale.items.map(item => (
 
-        <div key={item.id}>
+                  <div key={item.id}>
 
-          {item.name}
-          {" x"}
-          {item.qty}
+                    {item.name}
+                    {" x"}
+                    {item.qty}
 
-        </div>
+                  </div>
 
-      ))}
+                ))}
 
-      <div style={styles.historyTotal}>
+                <div style={styles.historyTotal}>
 
-        {sale.totalPrice}
+                  {sale.totalPrice}
 
-      </div>
+                </div>
 
-    </div>
+              </div>
+            ))}
 
-  ))}
 
-</div>
+          </div>
           <div style={styles.adminSection}>
 
             <input
@@ -650,7 +726,47 @@ setSalesHistory(prev => [
 }
 
 const styles = {
-    container: {
+  loginPage: {
+    height: "100vh",
+    background: "#111827",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Arial",
+  },
+
+  loginCard: {
+    width: "320px",
+    background: "#1f2937",
+    padding: "30px",
+    borderRadius: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    color: "white",
+  },
+
+  loginInput: {
+    height: "50px",
+    borderRadius: "12px",
+    border: "none",
+    paddingLeft: "14px",
+    background: "#374151",
+    color: "white",
+    fontSize: "16px",
+  },
+
+  loginButton: {
+    height: "55px",
+    border: "none",
+    borderRadius: "14px",
+    background: "#2563eb",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "18px",
+    cursor: "pointer",
+  },
+  container: {
     display: "flex",
     height: "100vh",
     background: "#111827",
@@ -698,15 +814,15 @@ const styles = {
   },
 
   products: {
-   searchInput: {
-   height: "50px",
-   borderRadius: "14px",
-   border: "none",
-   paddingLeft: "16px",
-   background: "#1f2937",
-   color: "white",
-   fontSize: "16px",
-},
+    searchInput: {
+      height: "50px",
+      borderRadius: "14px",
+      border: "none",
+      paddingLeft: "16px",
+      background: "#1f2937",
+      color: "white",
+      fontSize: "16px",
+    },
     flex: 1,
     overflowY: "auto",
     display: "flex",
@@ -850,34 +966,34 @@ const styles = {
 
   deleteButton: {
     historyCard: {
-  background: "#1f2937",
-  borderRadius: "12px",
-  padding: "12px",
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-},
+      background: "#1f2937",
+      borderRadius: "12px",
+      padding: "12px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "6px",
+    },
 
-historyDate: {
-  color: "#9ca3af",
-  fontSize: "12px",
-},
+    historyDate: {
+      color: "#9ca3af",
+      fontSize: "12px",
+    },
 
-historyTotal: {
-  marginTop: "8px",
-  fontWeight: "bold",
-  color: "#22c55e",
-},
+    historyTotal: {
+      marginTop: "8px",
+      fontWeight: "bold",
+      color: "#22c55e",
+    },
 
-clearHistoryButton: {
-  height: "45px",
-  border: "none",
-  borderRadius: "12px",
-  background: "#ef4444",
-  color: "white",
-  fontWeight: "bold",
-  cursor: "pointer",
-},
+    clearHistoryButton: {
+      height: "45px",
+      border: "none",
+      borderRadius: "12px",
+      background: "#ef4444",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+    },
     width: "40px",
     height: "40px",
     borderRadius: "10px",
